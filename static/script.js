@@ -15,10 +15,20 @@ document.addEventListener('DOMContentLoaded', function () {
     let conversationCounter = 0;
     let conversations = {};
 
+    // function displayMessage(message, sender) {
+    //     const messageElement = document.createElement('div');
+    //     messageElement.classList.add('message', sender);
+    //     messageElement.textContent = message;
+    //     chatMessages.appendChild(messageElement);
+    //     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    //     chatSection.scrollTop = chatSection.scrollHeight;
+    // }
+
     function displayMessage(message, sender) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', sender);
-        messageElement.textContent = message;
+        messageElement.innerHTML = message.replace(/\n/g, '<br>');
         chatMessages.appendChild(messageElement);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
