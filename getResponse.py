@@ -1,9 +1,12 @@
 import openai
+from dotenv import load_dotenv
+import os
 #from google.cloud import aiplatform
 #from vertexai.language_models import ChatModel
 #import anthropic
 
-openai.api_key = 'sk-proj-ZzVlrkW0MQFLEQMySCERT3BlbkFJZrOlcamn3duS2FBPv4Y0'
+load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def get_openai_completions(prompt, model="gpt-3.5-turbo"):
     response = openai.ChatCompletion.create(

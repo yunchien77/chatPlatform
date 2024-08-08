@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CancerFree Chat</title>
+    <title>Chat Platform</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 
 <body>
@@ -15,35 +16,37 @@
                 <h1>CancerFree Chat</h1>
                 <p>Build your own AI assistant.</p>
             </div><br><br>
-
             <div class="sidebar-nav">
                 <button id="new-conversation-btn">New Conversation</button>
                 <div id="conversation-list" class="conversation-list">
-                    <!-- 對話列表將在這裡動態生成 -->
+                    <div class="conversation active" data-id="1">
+
+                        <span class="conversation-title">New Conversation</span>
+                        <span class="date">2024/7/31 9:41:22</span>
+
+                        <button class="options-btn">⋮</button>
+                        <div class="options-menu">
+                            <button class="rename-btn">重新命名</button>
+                            <button class="delete-btn">刪除</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <div class="sidebar-footer">
                 <button id="settings-btn" class="icon-btn">
                     <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="Settings">
                 </button>
             </div>
         </div>
-
         <div class="main-content" role="main">
             <div id="chat-interface">
                 <div class="main-header">
-                    <h2>CancerFree Chat</h2>
-                    <p>您已經與 ChatGPT 進行了 <span id="conversation-count">0</span> 則對話</p>
-                </div>
-
-                <div id="no-conversation-message" style="display: none;">
-                    點擊按鈕開始新對話
+                    <h2>New Conversation</h2>
+                    <p>您已經與 ChatGPT 進行了 <span id="conversation-count">1</span> 則對話</p>
                 </div>
 
                 <div id="chat-section" class="chat-section">
                     <div id="chat-messages" class="chat-messages">
-                        <!-- 消息將在這裡動態生成 -->
                     </div>
                 </div>
 
@@ -54,18 +57,16 @@
                         <option value="gpt-4-turbo">gpt-4-turbo (OpenAI)</option>
                         <option value="gpt-4o">gpt-4o (OpenAI)</option>
                     </select>
-                    <input type="text" id="user-input" placeholder="輸入您的訊息...">
+                    <input type="text" id="user-input" placeholder="輸入訊息...">
                     <button id="send-btn">傳送</button>
                 </div>
             </div>
 
             <div id="settings-panel" class="settings-panel">
                 <h2>Settings</h2>
-                <!-- 設置面板的內容將在這裡添加 -->
             </div>
         </div>
     </div>
-
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 

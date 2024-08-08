@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const settingsIcon = document.getElementById('settings-btn');
     const settingsPanel = document.getElementById('settings-panel');
     const chatInterface = document.getElementById('chat-interface');
-    const noConversationMessage = document.getElementById('no-conversation-message');
 
-    let conversationCounter = 0;
+    let conversationCounter = 1;
     let conversations = {};
 
     function displayMessage(message, sender) {
@@ -29,32 +28,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const message = userInput.value.trim();
         const model = modelSelect.value;
         if (message) {
-            const activeConversationId = document.querySelector('.conversation.active')?.dataset.id;
-            if (activeConversationId) {
-                displayMessage(message, 'user');
-                conversations[activeConversationId].push({ sender: 'user', content: message });
+            const activeConversationId = document.querySelector('.conversation.active').dataset.id;
+            displayMessage(message, 'user');
+            conversations[activeConversationId].push({ sender: 'user', content: message });
 
-                fetch('/get-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: message, model: model })
+            fetch('/get-response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message, model: model })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    const botMessage = `(${data.model}) ${data.message}`;
+                    displayMessage(botMessage, 'bot');
+                    conversations[activeConversationId].push({ sender: 'bot', content: botMessage });
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        const botMessage = `(${data.model}) ${data.message}`;
-                        displayMessage(botMessage, 'bot');
-                        conversations[activeConversationId].push({ sender: 'bot', content: botMessage });
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        displayMessage('Error: Unable to get response', 'bot');
-                        conversations[activeConversationId].push({ sender: 'bot', content: 'Error: Unable to get response' });
-                    });
-                userInput.value = '';
-            }
+                .catch((error) => {
+                    console.error('Error:', error);
+                    displayMessage('Error: Unable to get response', 'bot');
+                    conversations[activeConversationId].push({ sender: 'bot', content: 'Error: Unable to get response' });
+                });
+            userInput.value = '';
         }
     }
 
@@ -93,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
         conversationList.appendChild(newConversation);
         updateConversationCount();
         selectConversation(newConversation);
-        updateChatDisplay();
     });
 
     conversationList.addEventListener('click', function (e) {
@@ -136,10 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (firstConversation) {
                     selectConversation(firstConversation);
                 } else {
-                    chatMessages.innerHTML = '';
+                    chatMessages.innerHTML = '<p>沒有對話記錄</p>';
                 }
             }
-            updateChatDisplay();
         }
         toggleOptionsMenu(conversationElement);
     }
@@ -152,7 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const messages = conversations[conversationId] || [];
         messages.forEach(msg => displayMessage(msg.content, msg.sender));
         chatSection.scrollTop = chatSection.scrollHeight;
-        updateChatDisplay();
     }
 
     function updateConversationCount() {
@@ -160,15 +154,10 @@ document.addEventListener('DOMContentLoaded', function () {
         conversationCount.textContent = count;
     }
 
-    function updateChatDisplay() {
-        const conversations = document.querySelectorAll('.conversation');
-        if (conversations.length === 0) {
-            noConversationMessage.style.display = 'block';
-            chatSection.style.display = 'none';
-        } else {
-            noConversationMessage.style.display = 'none';
-            chatSection.style.display = 'block';
-        }
+    // Initialize: select the first conversation (if it exists)
+    const firstConversation = document.querySelector('.conversation');
+    if (firstConversation) {
+        selectConversation(firstConversation);
     }
 
     // Close other open option menus
@@ -186,7 +175,4 @@ document.addEventListener('DOMContentLoaded', function () {
         settingsPanel.style.display = isSettingsPanelVisible ? 'none' : 'block';
         chatInterface.style.display = isSettingsPanelVisible ? 'block' : 'none';
     });
-
-    // Initialize chat display
-    updateChatDisplay();
 });
