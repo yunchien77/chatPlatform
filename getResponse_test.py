@@ -32,7 +32,6 @@ client = OpenAI(api_key=my_key)
 
 
 def get_openai_completions(prompt, model="gpt-4o-mini"):
-    print(f"model: {model}")
     completion = client.chat.completions.create(
     model=model,
     messages=[
@@ -41,3 +40,29 @@ def get_openai_completions(prompt, model="gpt-4o-mini"):
     )
     # print("my response: ", completion.choices[0].message.content)
     return completion.choices[0].message.content
+
+if __name__ == "__main__":
+    prompt = "給我一個笑話"
+    result = get_openai_completions(prompt)
+    print(result)
+'''
+def get_gemini_response(prompt, model="gemini-1.0-pro"):
+    chat_model = ChatModel.from_pretrained(model)
+    chat = chat_model.start_chat()
+    response = chat.send_message(prompt)
+    return response.text
+
+client = anthropic.Client(api_key="your-api-key")
+def get_claude_response(prompt, model="claude-2.0"):
+    response = client.completion(
+        prompt=f"{anthropic.HUMAN_PROMPT} {prompt}{anthropic.AI_PROMPT}",
+        model=model,
+        max_tokens_to_sample=300
+    )
+    return response.completion
+
+if __name__ == "__main__":
+    prompt = "Hello, how are you?"
+    result = get_openai_completions(prompt)
+    print(result)
+'''

@@ -7,17 +7,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-'''
-@app.route('/get-response', methods=['POST'])
-def get_response():
-    data = request.get_json()
-    prompt = data.get('prompt')
-    model = data.get('model')
-    print("-------------")
-    response = get_openai_completions(prompt, model)
-    return jsonify({'response': response})
-'''
-
 @app.route('/get-response', methods=['POST'])
 def send_message():
     data = request.get_json()
@@ -26,7 +15,8 @@ def send_message():
     if message and model:
         print(f"Received message: {message}")
         print(f"Selected model: {model}")
-        return jsonify({'status': 'success', 'message': message, 'model': model}), 200
+        response = get_openai_completions(message, model)
+        return jsonify({'status': 'success', 'message': response, 'model': model}), 200
     return jsonify({'status': 'error', 'message': 'No message or model received'}), 400
 
 

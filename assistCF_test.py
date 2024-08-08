@@ -63,7 +63,7 @@ async def add_message_to_thread(thread_id, user_question):
     return message
 
 async def get_answer(assistant_id, thread):
-    # print("Thinking...")
+    print("Thinking...")
     # run assistant
     # print("Running assistant...")
     run = await client.beta.threads.runs.create(
@@ -78,7 +78,7 @@ async def get_answer(assistant_id, thread):
             # print(f"Run completed")
             break
         elif runInfo.status == "failed":
-            # print(f"Run failed: {runInfo.last_error}")
+            print(f"Run failed: {runInfo.last_error}")
             return None
         # print("Waiting 1sec...")
         await asyncio.sleep(1)
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         file_paths = [os.path.join(documents_folder, f) for f in os.listdir(documents_folder) if os.path.isfile(os.path.join(documents_folder, f))]
         
         if not file_paths:
-            # print(f"{bcolors.FAIL}No files found in the documents folder.{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}No files found in the documents folder.{bcolors.ENDC}")
             return
 
         # print(f"Found {len(file_paths)} files in the documents folder:")
@@ -125,8 +125,7 @@ if __name__ == "__main__":
         # print("Created thread with id:" , f"{bcolors.HEADER}{thread.id}{bcolors.ENDC}")
         
     
-        # question = input("How may I help you today? (Type 'exit' to quit)\n")
-        question = input()
+        question = input("How may I help you today? (Type 'exit' to quit)\n")
         # if "exit" in question.lower():
         #     break
             
@@ -136,11 +135,9 @@ if __name__ == "__main__":
         if message_content:
             # print(f"FYI, your thread is: {bcolors.HEADER}{thread.id}{bcolors.ENDC}")
             # print(f"FYI, your assistant is: {bcolors.HEADER}{assistant.id}{bcolors.ENDC}")
-            # print(f"{message_content}")
-            return message_content
+            print(f"{message_content}")
         else:
-            # print(f"{bcolors.FAIL}Failed to get an answer. Please try again.{bcolors.ENDC}")
-            return "Something error ;("
+            print(f"{bcolors.FAIL}Failed to get an answer. Please try again.{bcolors.ENDC}")
         
         # print(f"{bcolors.OKGREEN}Thanks and happy to serve you{bcolors.ENDC}")
 
