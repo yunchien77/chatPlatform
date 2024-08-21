@@ -1,4 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const modelSelectHeader = document.querySelector('.model-select-header');
+    const modelSelectDropdown = document.querySelector('.model-select-dropdown');
+
+    modelSelectHeader.addEventListener('click', function () {
+        modelSelectDropdown.style.display = modelSelectDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // 關閉上拉式選單(點擊外部)
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.model-select-container')) {
+            modelSelectDropdown.style.display = 'none';
+        }
+    });
+
+    // 更新選擇的模型顯示
+    function updateSelectedModelsDisplay() {
+        const selectedModels = Array.from(document.querySelectorAll('.model-select-dropdown input:checked'))
+            .map(checkbox => checkbox.value);
+        modelSelectHeader.textContent = selectedModels.length > 0
+            ? `▲ ${selectedModels.length} Models Selected`
+            : '▲ Please Select Model';
+    }
+
+    // 為每個複選框添加change事件監聽器
+    document.querySelectorAll('.model-select-dropdown input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectedModelsDisplay);
+    });
+
     const sendBtn = document.getElementById('send-btn');
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
@@ -15,54 +43,70 @@ document.addEventListener('DOMContentLoaded', function () {
     let conversationCounter = 0;
     let conversations = {};
 
-    // function displayMessage(message, sender) {
+    function getSelectedModels() {
+        return Array.from(document.querySelectorAll('.model-select-dropdown input:checked'))
+            .map(checkbox => checkbox.value);
+    }
+
+    // function displayMessage(message, sender, model = '') {
     //     const messageElement = document.createElement('div');
     //     messageElement.classList.add('message', sender);
-    //     messageElement.textContent = message;
+    //     if (model) {
+    //         messageElement.innerHTML = `<strong>(${model})</strong><br> ${message.replace(/\n/g, '<br>')}`;
+    //     } else {
+    //         messageElement.innerHTML = message.replace(/\n/g, '<br>');
+    //     }
     //     chatMessages.appendChild(messageElement);
     //     chatMessages.scrollTop = chatMessages.scrollHeight;
-
     //     chatSection.scrollTop = chatSection.scrollHeight;
     // }
 
-    function displayMessage(message, sender) {
+    function displayMessage(message, sender, model = '') {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', sender);
-        messageElement.innerHTML = message.replace(/\n/g, '<br>');
+
+        // 使用 marked.js 來解析 Markdown
+        const parsedMessage = marked.parse(message);
+
+        if (model) {
+            messageElement.innerHTML = `<strong>(${model})</strong><br> ${parsedMessage}`;
+        } else {
+            messageElement.innerHTML = parsedMessage;
+        }
         chatMessages.appendChild(messageElement);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
         chatSection.scrollTop = chatSection.scrollHeight;
     }
 
     function sendMessage() {
         const message = userInput.value.trim();
-        const model = modelSelect.value;
-        if (message) {
+        const selectedModels = getSelectedModels();
+        if (message && selectedModels.length > 0) {
             const activeConversationId = document.querySelector('.conversation.active')?.dataset.id;
             if (activeConversationId) {
                 displayMessage(message, 'user');
                 conversations[activeConversationId].push({ sender: 'user', content: message });
 
-                fetch('/get-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: message, model: model })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        const botMessage = `(${data.model}) ${data.message}`;
-                        displayMessage(botMessage, 'bot');
-                        conversations[activeConversationId].push({ sender: 'bot', content: botMessage });
+                selectedModels.forEach(model => {
+                    fetch('/get-response', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: message, model: model, format: 'markdown' })
                     })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        displayMessage('Error: Unable to get response', 'bot');
-                        conversations[activeConversationId].push({ sender: 'bot', content: 'Error: Unable to get response' });
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
+                            displayMessage(data.message, 'bot', data.model);
+                            conversations[activeConversationId].push({ sender: 'bot', content: data.message, model: data.model });
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            displayMessage('Error: Unable to get response', 'bot', model);
+                            conversations[activeConversationId].push({ sender: 'bot', content: 'Error: Unable to get response', model: model });
+                        });
+                });
                 userInput.value = '';
             }
         }
@@ -160,10 +204,11 @@ document.addEventListener('DOMContentLoaded', function () {
         chatMessages.innerHTML = '';  // Clear previous messages
         const conversationId = conversationElement.dataset.id;
         const messages = conversations[conversationId] || [];
-        messages.forEach(msg => displayMessage(msg.content, msg.sender));
+        messages.forEach(msg => displayMessage(msg.content, msg.sender, msg.model));
         chatSection.scrollTop = chatSection.scrollHeight;
         updateChatDisplay();
     }
+
 
     function updateConversationCount() {
         const count = document.querySelectorAll('.conversation').length;

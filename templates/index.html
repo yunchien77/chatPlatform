@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatCF</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -48,30 +49,58 @@
                 </div>
 
                 <div class="input-section">
-                    <select id="model-select">
-                        <option value="CancerFree">CancerFree Biotech (OpenAI)</option>
-                        <option value="gpt-4o-mini">gpt-4o-mini (OpenAI)</option>
-                        <option value="gpt-4o-mini-2024-07-18">gpt-4o-mini-2024-07-18 (OpenAI)</option>
-                        <option value="gpt-4o">gpt-4o (OpenAI)</option>
-                        <option value="gpt-4o-2024-05-13">gpt-4o-2024-05-13 (OpenAI)</option>
-                        <option value="gpt-4o-2024-08-06">gpt-4o-2024-08-06 (OpenAI)</option>
-                        <option value="gpt-4-turbo">gpt-4-turbo (OpenAI)</option>
-                        <option value="gpt-4-turbo-2024-04-09">gpt-4-turbo-2024-04-09 (OpenAI)</option>
-                        <option value="gpt-4-turbo-preview">gpt-4-turbo-preview (OpenAI)</option>
-                        <option value="gpt-4o-2024-05-13">gpt-4o-2024-05-13 (OpenAI)</option>
+                    <div class="model-select-container">
+                        <div class="model-select-header">▲ Please Select Model</div>
+                        <div class="model-select-dropdown">
+                            <label><input type="checkbox" name="model" value="CancerFree"> CancerFree Biotech
+                                (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-mini"> gpt-4o-mini (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-mini-2024-07-18">
+                                gpt-4o-mini-2024-07-18 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o">
+                                gpt-4o (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-05-13">
+                                gpt-4o-2024-05-13 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-08-06">
+                                gpt-4o-2024-08-06 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo">
+                                gpt-4-turbo (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo-2024-04-09">
+                                gpt-4-turbo-2024-04-09 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo-preview">
+                                gpt-4-turbo-preview (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-05-13">
+                                gpt-4o-2024-05-13 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0125-preview">
+                                gpt-4-0125-preview (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-1106-preview">
+                                gpt-4-1106-preview (OpenAI)</label>
 
-                        <option value="gpt-4-0125-preview">gpt-4-0125-preview (OpenAI)</option>
-                        <option value="gpt-4-1106-preview">gpt-4-1106-preview (OpenAI)</option>
-                        <option value="gpt-4">gpt-4 (OpenAI)</option>
-                        <option value="gpt-4-0613">gpt-4-0613 (OpenAI)</option>
+                            <label><input type="checkbox" name="model" value="gpt-4">
+                                gpt-4 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0613">
+                                gpt-4-0613 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0314">
+                                gpt-4-0314 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-0125">
+                                gpt-3.5-turbo-0125 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo">
+                                gpt-3.5-turbo (OpenAI)</label>
 
-                        <option value="gpt-4-0314">gpt-4-0314 (OpenAI)</option>
-                        <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125 (OpenAI)</option>
-                        <option value="gpt-3.5-turbo">gpt-3.5-turbo (OpenAI)</option>
-                        <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106 (OpenAI)</option>
-                        <option value="gpt-3.5-turbo-instruct">gpt-3.5-turbo-instruct (OpenAI)</option>
-                    </select>
-                    <input type="text" id="user-input" placeholder="輸入您的訊息...">
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-1106">
+                                gpt-3.5-turbo-1106 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-instruct">
+                                gpt-3.5-turbo-instruct (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.5-pro">
+                                gemini-1.5-pro (Gemini)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.5-flash">
+                                gemini-1.5-flash (Gemini)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.0-pro">
+                                gemini-1.0-pro (Gemini)</label>
+                        </div>
+                    </div>
+
+                    <textarea id="user-input" placeholder="輸入您的訊息..." rows="2"></textarea>
                     <button id="send-btn">傳送</button>
                 </div>
             </div>
