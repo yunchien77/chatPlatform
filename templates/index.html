@@ -105,9 +105,22 @@
                 </div>
             </div>
 
-            <div id="settings-panel" class="settings-panel">
+            <div id="settings-panel">
                 <h2>Settings</h2>
-                <!-- 設置面板的內容將在這裡添加 -->
+                <div class="settings-content">
+                    <div class="file-upload-section">
+                        <div class="file-upload-header">
+                            <h3>Assistant Upload Files</h3>
+                            <div class="upload-controls">
+                                <input type="file" id="file-upload" multiple style="display: none;">
+                                <button id="upload-button">Choose Files</button>
+                                <button id="confirm-upload" style="display: none;">Upload</button>
+                            </div>
+                        </div>
+                        <div id="file-list"></div>
+                        <div id="upload-status"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

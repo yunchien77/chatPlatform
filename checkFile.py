@@ -24,7 +24,24 @@ async def list_uploaded_files():
     # return assistant_files
     return [{"id": file.id, "name": file.filename} for file in assistant_files]
 
-async def delete_files():
+async def delete_file(file_id):
+    try:
+        url = f"https://api.openai.com/v1/files/{file_id}"
+        headers = {
+            "Authorization": f"Bearer {my_key}"
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.delete(url, headers=headers) as response:
+                if response.status == 200:
+                    print(f"Deleted file")
+                else:
+                    print(f"Failed to delete file")
+    except Exception as e:
+        print(f"Failed to delete file. Error: {str(e)}")
+
+
+async def delete_all_files():
     files = await list_uploaded_files()
     for file in files:
         try:
@@ -42,4 +59,8 @@ async def delete_files():
         except Exception as e:
             print(f"Failed to delete file: {file['name']}. Error: {str(e)}")
 
-print(asyncio.run(list_uploaded_files()))
+#print(asyncio.run(list_uploaded_files()))
+
+asyncio.run(delete_file('file-tdskYbuVlNkxe8jVddYU61vy'))
+# 
+# 

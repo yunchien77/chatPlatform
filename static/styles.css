@@ -354,6 +354,8 @@ label {
     margin-top: 5px;
 }
 
+
+
 #settings-panel {
     display: none;
     /* 其他樣式 */
@@ -367,6 +369,74 @@ label {
 /* 顯示設定面板時顯示標題 */
 #settings-panel.show h2 {
     display: block;
+}
+
+#settings-panel {
+    padding: 20px;
+}
+
+.settings-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-upload-section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.file-upload-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-upload-header h3 {
+    margin: 0;
+}
+
+.upload-controls {
+    display: flex;
+    gap: 10px;
+}
+
+#upload-button,
+#confirm-upload {
+    padding: 8px 16px;
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#upload-button {
+    background-color: #038b79;
+    color: white;
+}
+
+#confirm-upload {
+    background-color: #d5dbd9;
+    color: black;
+}
+
+#upload-button:hover {
+    background-color: #026d5f;
+}
+
+#confirm-upload:hover {
+    background-color: #a1afaa;
+}
+
+#file-list {
+    max-height: 100px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#upload-status {
+    margin-top: 10px;
+    font-size: 0.9em;
 }
 
 /*

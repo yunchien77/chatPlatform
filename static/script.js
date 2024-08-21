@@ -244,4 +244,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize chat display
     updateChatDisplay();
+
+    const fileUpload = document.getElementById('file-upload');
+    const uploadButton = document.getElementById('upload-button');
+    const confirmUpload = document.getElementById('confirm-upload');
+    const fileList = document.getElementById('file-list');
+    const uploadStatus = document.getElementById('upload-status');
+
+    let filesToUpload = [];
+
+    uploadButton.addEventListener('click', function () {
+        fileUpload.click();
+    });
+
+    fileUpload.addEventListener('change', function () {
+        filesToUpload = Array.from(fileUpload.files);
+        updateFileList();
+        confirmUpload.style.display = 'inline-block';
+        uploadStatus.textContent = '';
+    });
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        filesToUpload.forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.textContent = file.name;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+    confirmUpload.addEventListener('click', function () {
+        if (filesToUpload.length > 0) {
+            uploadFiles(filesToUpload);
+        }
+    });
+
+    function uploadFiles(files) {
+        uploadStatus.textContent = 'Loading...';
+
+        const formData = new FormData();
+        files.forEach(file => {
+            formData.append('files', file);
+        });
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                uploadStatus.textContent = 'Files uploaded successfully!';
+                filesToUpload = [];
+                updateFileList();
+                confirmUpload.style.display = 'none';
+            })
+            .catch(error => {
+                uploadStatus.textContent = 'Error uploading files.';
+                console.error('Error:', error);
+            });
+    }
 });
