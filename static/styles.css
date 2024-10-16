@@ -175,6 +175,10 @@ body {
     color: #999;
 }
 
+label {
+    font-size: 14px;
+}
+
 .model-selector {
     position: absolute;
     top: 20px;
@@ -185,50 +189,91 @@ body {
     background-color: #333;
     color: #e0e0e0;
     border: 1px solid #444;
-    border-radius: 5px;
-    padding: 8px;
+    border-radius: 1px;
+    padding: 1px;
     cursor: pointer;
 }
 
-/*
-.chat-section {
-    flex-grow: 1;
-    background-color: #181818;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    overflow-y: auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+#model-select {
+    width: 200px;
+    padding: 2px;
+    margin-bottom: 7px;
+    max-height: 50px;
 }
-*/
+
+#model-select option {
+    padding: 4px;
+}
+
+#model-select option:checked {
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+.model-select-container {
+    position: relative;
+    display: inline-block;
+}
+
+.model-select-header {
+    padding: 10px;
+    width: 200px;
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    cursor: pointer;
+    color: white;
+}
+
+.model-select-dropdown {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #2c2c2c;
+    min-width: 160px;
+    box-shadow: 0px -8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.model-select-dropdown label {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.model-select-dropdown label:hover {
+    background-color: #444;
+}
+
+.model-select-dropdown input[type="checkbox"] {
+    margin-right: 10px;
+}
 
 .chat-section {
     flex-grow: 1;
     background-color: #181818;
     padding: 20px;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 60px;
     overflow-y: auto;
-    max-height: calc(100vh - 200px);
-    /* 調整這個值以適應您的布局 */
+    max-height: calc(100vh - 260px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.chat-box p {
-    font-size: 1rem;
-    color: #cccccc;
 }
 
 .input-section {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 10px;
     border-top: 1px solid #444;
     position: absolute;
     bottom: 0;
-    width: calc(100% - 40px);
-    /* 減去 padding */
+    left: 0;
+    right: 0;
+    background-color: #1e1e1e;
 }
 
 .input-section input {
@@ -282,6 +327,8 @@ body {
     margin-top: 5px;
 }
 
+
+
 #settings-panel {
     display: none;
     /* 其他樣式 */
@@ -297,27 +344,134 @@ body {
     display: block;
 }
 
-/*
-.chat-messages {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    max-height: calc(100% - 60px);
-    padding: 10px;
+#settings-panel {
+    padding: 20px;
 }
-*/
+
+.settings-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-upload-section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.file-upload-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.file-upload-header h3 {
+    margin: 0;
+}
+
+.upload-controls {
+    display: flex;
+    gap: 10px;
+}
+
+#upload-button,
+#confirm-upload {
+    padding: 8px 16px;
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#upload-button {
+    background-color: #038b79;
+    color: white;
+}
+
+#confirm-upload {
+    background-color: #d5dbd9;
+    color: black;
+}
+
+#upload-button:hover {
+    background-color: #026d5f;
+}
+
+#confirm-upload:hover {
+    background-color: #a1afaa;
+}
+
+#file-list {
+    max-height: 100px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#upload-status {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
 .chat-messages {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+
 .message {
     max-width: 70%;
     padding: 10px;
     border-radius: 10px;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.message pre,
+.message code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.message pre {
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.message img {
+    max-width: 100%;
+    height: auto;
+}
+
+.message table {
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+.message ul,
+.message ol {
+    padding-left: 20px;
+}
+
+.message h1 {
+    font-size: 1.5em;
+}
+
+.message h2 {
+    font-size: 1.3em;
+}
+
+.message h3 {
+    font-size: 1.1em;
+}
+
+.message h4,
+.message h5,
+.message h6 {
+    font-size: 1em;
 }
 
 .user {
@@ -334,7 +488,14 @@ body {
 
 .input-section {
     display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 10px;
+    border-top: 1px solid #444;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: #1e1e1e;
 }
 
@@ -345,6 +506,8 @@ body {
     border-radius: 5px;
     background-color: #333;
     color: white;
+    overflow-y: auto;
+    resize: none;
 }
 
 #send-btn {
@@ -359,4 +522,50 @@ body {
 
 #send-btn:hover {
     background-color: #005a4f;
+}
+
+.file-list-section {
+    margin-top: 20px;
+}
+
+.uploaded-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.delete-file-btn {
+    background-color: #eba0a0;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-file-btn:hover {
+    background-color: #975454;
+    color: white;
+}
+
+#uploaded-files-list {
+    max-height: 300px;
+    /* 限制高度，讓最多只能顯示五個項目 */
+    overflow-y: auto;
+    /* 超出範圍時允許垂直捲動 */
+    /* border-top: 1px solid #444;
+    padding-top: 10px; */
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    scrollbar-width: thin;
+    /* Firefox: 使用較細的滾動條 */
+    scrollbar-color: #666 #1e1e1e;
+    /* Firefox: 調整滾動條和背景顏色 */
+}
+
+.uploaded-file-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #555;
 }

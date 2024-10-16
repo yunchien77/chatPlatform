@@ -1,35 +1,32 @@
-import openai
-#from google.cloud import aiplatform
-#from vertexai.language_models import ChatModel
-#import anthropic
+from dotenv import load_dotenv
+import os
+from openai import OpenAI
+import google.generativeai as genai
 
-openai.api_key = 'sk-proj-ZzVlrkW0MQFLEQMySCERT3BlbkFJZrOlcamn3duS2FBPv4Y0'
+load_dotenv()
 
-def get_openai_completions(prompt, model="gpt-3.5-turbo"):
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    result = response.choices[0].message.content
-    return result
-'''
-def get_gemini_response(prompt, model="gemini-1.0-pro"):
-    chat_model = ChatModel.from_pretrained(model)
-    chat = chat_model.start_chat()
-    response = chat.send_message(prompt)
+def get_gemini_completions(prompt, model):
+    api_key = os.getenv('GEMINI_API_KEY')
+    genai.configure(api_key = api_key)
+
+    model = genai.GenerativeModel(model)
+    response = model.generate_content(prompt)
+
+    print(response.text)
     return response.text
 
-client = anthropic.Client(api_key="your-api-key")
-def get_claude_response(prompt, model="claude-2.0"):
-    response = client.completion(
-        prompt=f"{anthropic.HUMAN_PROMPT} {prompt}{anthropic.AI_PROMPT}",
-        model=model,
-        max_tokens_to_sample=300
-    )
-    return response.completion
 
-if __name__ == "__main__":
-    prompt = "Hello, how are you?"
-    result = get_openai_completions(prompt)
-    print(result)
-'''
+def get_openai_completions(prompt, model="gpt-4o-mini"):
+    print(f"model: {model}")
+
+    api_key = os.getenv('OPENAI_API_KEY')
+    client = OpenAI(api_key=api_key)
+
+    completion = client.chat.completions.create(
+    model=model,
+    messages=[
+        {"role": "assistant", "content": "You will serve as the chatbot and senior analyst. Your task is to answer user questions."},
+        {"role": "user", "content": prompt}]
+    )
+    # print("my response: ", completion.choices[0].message.content)
+    return completion.choices[0].message.content

@@ -1,70 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Platform</title>
+    <title>ChatCF</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h1>CancerFree Chat</h1>
-                <p>Build your own AI assistant.</p>
+                <h1>ChatCF</h1>
+                <p>AI assistant for CancerFree Biotech.</p>
             </div><br><br>
+
             <div class="sidebar-nav">
                 <button id="new-conversation-btn">New Conversation</button>
                 <div id="conversation-list" class="conversation-list">
-                    <div class="conversation active" data-id="1">
-                        <span class="conversation-title">New Conversation</span>
-                        <span class="date">2024/7/31 9:41:22</span>
-                        <button class="options-btn">⋮</button>
-                        <div class="options-menu">
-                            <button class="rename-btn">重新命名</button>
-                            <button class="delete-btn">刪除</button>
-                        </div>
-                    </div>
+                    <!-- 對話列表將在這裡動態生成 -->
                 </div>
             </div>
+
             <div class="sidebar-footer">
                 <button id="settings-btn" class="icon-btn">
                     <img src="{{ url_for('static', filename='img/settings.svg') }}" alt="Settings">
                 </button>
             </div>
         </div>
+
         <div class="main-content" role="main">
             <div id="chat-interface">
                 <div class="main-header">
-                    <h2>New Conversation</h2>
-                    <p>您已經與 ChatGPT 進行了 <span id="conversation-count">1</span> 則對話</p>
+                    <h2>CancerFree Chat</h2>
+                    <p>您已經與 ChatGPT 進行了 <span id="conversation-count">0</span> 則對話</p>
+                </div>
+
+                <div id="no-conversation-message" style="display: none;">
+                    點擊按鈕開始新對話
                 </div>
 
                 <div id="chat-section" class="chat-section">
                     <div id="chat-messages" class="chat-messages">
+                        <!-- 消息將在這裡動態生成 -->
                     </div>
                 </div>
 
                 <div class="input-section">
-                    <select id="model-select">
-                        <option value="gpt-3.5-turbo">gpt-3.5-turbo (OpenAI)</option>
-                        <option value="gpt-4">gpt-4 (OpenAI)</option>
-                        <option value="gpt-4-turbo">gpt-4-turbo (OpenAI)</option>
-                        <option value="gpt-4o">gpt-4o (OpenAI)</option>
-                    </select>
-                    <input type="text" id="user-input" placeholder="輸入訊息...">
+                    <div class="model-select-container">
+                        <div class="model-select-header">▲ Please Select Model</div>
+                        <div class="model-select-dropdown">
+                            <label><input type="checkbox" name="model" value="CancerFree"> CancerFree Biotech
+                                (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-mini"> gpt-4o-mini (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-mini-2024-07-18">
+                                gpt-4o-mini-2024-07-18 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o">
+                                gpt-4o (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-05-13">
+                                gpt-4o-2024-05-13 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-08-06">
+                                gpt-4o-2024-08-06 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo">
+                                gpt-4-turbo (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo-2024-04-09">
+                                gpt-4-turbo-2024-04-09 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-turbo-preview">
+                                gpt-4-turbo-preview (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4o-2024-05-13">
+                                gpt-4o-2024-05-13 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0125-preview">
+                                gpt-4-0125-preview (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-1106-preview">
+                                gpt-4-1106-preview (OpenAI)</label>
+
+                            <label><input type="checkbox" name="model" value="gpt-4">
+                                gpt-4 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0613">
+                                gpt-4-0613 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-4-0314">
+                                gpt-4-0314 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-0125">
+                                gpt-3.5-turbo-0125 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo">
+                                gpt-3.5-turbo (OpenAI)</label>
+
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-1106">
+                                gpt-3.5-turbo-1106 (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gpt-3.5-turbo-instruct">
+                                gpt-3.5-turbo-instruct (OpenAI)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.5-pro">
+                                gemini-1.5-pro (Gemini)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.5-flash">
+                                gemini-1.5-flash (Gemini)</label>
+                            <label><input type="checkbox" name="model" value="gemini-1.0-pro">
+                                gemini-1.0-pro (Gemini)</label>
+                        </div>
+                    </div>
+
+                    <textarea id="user-input" placeholder="輸入您的訊息..." rows="2"></textarea>
                     <button id="send-btn">傳送</button>
                 </div>
             </div>
 
-            <div id="settings-panel" class="settings-panel">
+            <div id="settings-panel">
                 <h2>Settings</h2>
+                <div class="settings-content">
+                    <div class="file-upload-section">
+                        <div class="file-upload-header">
+                            <h3>Assistant Upload Files</h3>
+                            <div class="upload-controls">
+                                <button id="upload-button">Choose Files</button>
+                                <button id="confirm-upload">Upload</button>
+                            </div>
+                        </div>
+                        <input type="file" id="file-upload" multiple style="display: none;">
+                        <div id="file-list"></div>
+                        <div id="upload-status"></div>
+
+                        <div class="file-list-section">
+                            <h3>List Files</h3>
+                            <div id="uploaded-files-list"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
